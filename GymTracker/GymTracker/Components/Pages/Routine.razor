@@ -1,0 +1,56 @@
+﻿@inject GymTracker.Services.WorkoutService workoutService
+
+@page "/routine"
+
+<h3>Routine for this week </h3>
+
+@foreach (var day in daysOfTheWeek)
+{
+    // Filter exercises for the current day
+    var exercisesForDay = workoutService.Exercises
+        .Where(e => e.DayOfWeek == day)
+        .ToList();
+
+    // Check if there are any exercises for this day
+    if (exercisesForDay.Any())
+    {
+        <h4>@day</h4>
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Exercise order</th>
+                    <th scope="col">Exercise</th>
+                    <th scope="col">Sets</th>
+                    <th scope="col">Reps</th>
+                    <th scope="col">Weight</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var exercise in exercisesForDay)
+                {
+                    <tr>
+                        <th scope="row">@exercisesForDay.IndexOf(exercise)</th>
+                        <td>@exercise.Name</td>
+                        <td>@exercise.Sets</td>
+                        <td>@exercise.Reps</td>
+                        <td>@exercise.Weight</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+@code {
+    string[] daysOfTheWeek = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+
+    protected override void OnInitialized()
+    {
+        workoutService.OnExercisesChanged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        workoutService.OnExercisesChanged -= StateHasChanged;
+    }
+}

@@ -1,0 +1,106 @@
+﻿@page "/calories"
+<h3>Calories</h3>
+<div class="wrapper">
+<div>
+    <label class="label1">Weight</label> <input @bind="@weight" type="number" />
+</div>
+<div>
+    <label class="label1">Height</label> <input @bind="@height" type="number" />
+</div>
+<div>
+    <label class="label1">Age</label> <input @bind="age" type="number" />
+</div>
+<div>
+    <label class="label1">Sex</label>
+    <select id="sex" @bind="sex">
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+    </select>
+</div>
+<div>
+    <label class="label1">Exercise</label>
+    <select id="sport" @bind="activityLevel">
+        <option value="sedentary">Sedentary</option>
+        <option value="1to3">1-3 times/week</option>
+        <option value="4to5">4-5 times/week</option>
+        <option value="6to7">6-7 times/week</option>
+    </select>
+</div>
+
+    <button type="button" class="btn btn-light" @onclick="BMR">Calculate</button>
+
+<div>
+    <h1>Total Calories: @Math.Round(totalCalories)</h1>
+</div>
+</div>
+
+<style>
+    .wrapper{
+        background-color: #8500ff;
+        box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.2);
+        border-radius:5px;
+        padding: 10px;
+    }
+
+    input{
+        background: transparent;
+        border: none;
+        color: white;
+    }
+
+    select{
+        background: transparent;
+    }
+
+    h1{
+        color:white;
+    }
+
+    label{
+        margin-right:10%;
+        color:white;
+    }
+    
+    select{
+        color:white;
+    }
+</style>
+
+@code {
+    private decimal weight;
+    private decimal height;
+    private decimal age;
+    private string sex = "Male";
+    private string activityLevel = "sedentary";
+    private decimal totalCalories;
+
+    public void BMR()
+    {
+        decimal result;
+
+        if (sex == "Male")
+        {
+            result = 66.5m + (13.75m * weight) + (5.003m * height) - (6.75m * age);
+        }
+        else
+        {
+            result = 447.593m + (9.247m * weight) + (3.098m * height) - (4.330m * age);
+        }
+
+        switch (activityLevel)
+        {
+            case "sedentary":
+                totalCalories = result * 1.2m;
+                break;
+            case "1to3":
+                totalCalories = result * 1.375m;
+                break;
+            case "4to5":
+                totalCalories = result * 1.55m;
+                break;
+            case "6to7":
+                totalCalories = result * 1.725m;
+                break;
+        }
+    }
+}

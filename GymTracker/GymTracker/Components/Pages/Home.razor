@@ -1,0 +1,71 @@
+﻿@inject GymTracker.Services.WorkoutService workoutService
+
+@page "/"
+
+<div class="card" style="width: 18rem; border-radius:5px; box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.2); cursor:pointer; display:inline-block; margin-right:20px;">
+    <img src="/seated-dumbbell-shoulder-press-800.jpg" alt="Card image cap" class="card-img-top">
+    <div class="card-body" style="border:solid 1px; border-color:blue;">
+        <h5 class="card-title">Shoulder Press</h5>
+        <p class="card-text">Targets: Anterior deltoid, deltoids, triceps, trapezius and pecs.</p>
+        <Button Color="ButtonColor.Primary" @onclick="OnShowModalClick">Add to Routine</Button>
+    </div>
+</div>
+
+<div class="card" style="width: 18rem; border-radius:5px; box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.2); cursor:pointer; display:inline-block; margin-right:20px;">
+    <img src="/dumbbell-lateral-raise-800.jpg" alt="Card image cap" class="card-img-top">
+    <div class="card-body" style="border:solid 1px; border-color:blue;">
+        <h5 class="card-title">Lateral Raises</h5>
+        <p class="card-text">Targets: Deltoid muscles, trapezius, serratus anterior. </p>
+        <Button Color="ButtonColor.Primary" @onclick="OnShowModalClick">Add to Routine</Button>
+    </div>
+</div>
+
+<Modal @ref="modal" title="Choose a day of the week" UseStaticBackdrop="true" CloseOnEscape="false">
+    <BodyTemplate>
+        <label for="days">Choose a day:</label>
+        <select id="days" name="day" @bind="selectedDay">
+            <option value="Monday">Monday</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wednesday">Wednesday</option>
+            <option value="Thursday">Thursday</option>
+            <option value="Friday">Friday</option>
+            <option value="Saturday">Saturday</option>
+            <option value="Sunday">Sunday</option>
+        </select>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
+        <Button Color="ButtonColor.Primary" @onclick='() => AddToWorkout("hi")'>Submit</Button>
+    </FooterTemplate>
+</Modal>
+
+@code {
+    private string selectedDay = "Monday";
+    private string selectedExerciseName = string.Empty;
+
+    public void AddToWorkout(string ExerciseName)
+    {
+        workoutService.AddExercise(new Services.WorkoutExercise
+            {
+                Name = "Shoulder Press",
+                Sets = 2,
+                Reps = 15,
+                Weight = 40,
+                DayOfWeek = selectedDay
+            });
+
+        OnHideModalClick();
+    }
+
+    private Modal modal = default!;
+
+    private async Task OnShowModalClick()
+    {
+        await modal.ShowAsync();
+    }
+
+    private async Task OnHideModalClick()
+    {
+        await modal.HideAsync();
+    }
+}

@@ -1,0 +1,1 @@
+C:\Users\diazf\Desktop\Projekte\GymTracker\GymTracker\GymTracker.csproj;x64
